@@ -11,7 +11,7 @@ courseraCourse.get('/course', (req, res) => {
     let scrape = async () => { // Prepare scrape...
 
         const browser = await puppeteer.launch({
-        executablePath: '/usr/bin/google-chrome-stable',
+        // executablePath: '/usr/bin/google-chrome-stable',
         headless: true, //false only when on localServer to view simulation
         ignoreHTTPSErrors: true,
         args: [
@@ -44,7 +44,7 @@ courseraCourse.get('/course', (req, res) => {
         }); // Define the Maps URL to Scrape...
 
         console.log('waiting for selector');
-        //await page.waitFor(3000);
+        ///await page.waitFor(3000);
 
         try {
             const result = await page.evaluate(() => { // Let's create variables and store values...

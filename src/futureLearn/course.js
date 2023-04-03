@@ -11,7 +11,7 @@ courseraCourse.get('/course', (req, res) => {
     let scrape = async () => { // Prepare scrape...
 
         const browser = await puppeteer.launch({
-        executablePath: '/usr/bin/google-chrome-stable',
+        //executablePath: '/usr/bin/google-chrome-stable',
         headless: true, //false only when on localServer to view simulation
         ignoreHTTPSErrors: true,
         args: [
