@@ -12,7 +12,11 @@ instructorCourse.get('/instructor', (req, res) => {
 
         const browser = await puppeteer.launch({
         //executablePath: '/usr/bin/google-chrome-stable',
-        headless: true, //false only when on localServer to view simulation
+        headless: 'new', 
+        // `headless: true` (default) enables old Headless;
+        // `headless: 'new'` enables new Headless;
+        // `headless: false` enables “headful” mode.;
+        // `false only when on localServer to view simulation;
         ignoreHTTPSErrors: true,
         args: [
             '--no-sandbox',

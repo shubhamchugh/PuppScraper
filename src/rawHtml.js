@@ -1,9 +1,17 @@
-const puppeteer = require('puppeteer'); 
+// puppeteer-extra is a drop-in replacement for puppeteer,
+// it augments the installed puppeteer with plugin functionality
+const puppeteer = require('puppeteer-extra')
 const express = require('express');
 
-const partnerCourse = express.Router();
+const rawHtml = express.Router();
 
-partnerCourse.get('/partner', (req, res) => {
+// add stealth plugin and use defaults (all evasion techniques)
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+puppeteer.use(StealthPlugin())
+
+const {executablePath} = require('puppeteer') 
+
+rawHtml.get('/', (req, res) => {
 
     // Access the provided 'page' and 'limit' query parameters
     let url = req.query.url;
@@ -11,7 +19,8 @@ partnerCourse.get('/partner', (req, res) => {
     let scrape = async () => { // Prepare scrape...
 
         const browser = await puppeteer.launch({
-        //executablePath: '/usr/bin/google-chrome-stable',
+        executablePath: executablePath(),
+        // executablePath: '/usr/bin/google-chrome-stable',
         headless: 'new', 
         // `headless: true` (default) enables old Headless;
         // `headless: 'new'` enables new Headless;
@@ -43,51 +52,15 @@ partnerCourse.get('/partner', (req, res) => {
         //await page.goto('https://www.google.com/maps/place/Microsoft/@36.1275216,-115.1728651,17z/data=!3m1!5s0x80c8c416a26be787:0x4392ab27a0ae83e0!4m7!3m6!1s0x80c8c4141f4642c5:0x764c3f951cfc6355!8m2!3d36.1275216!4d-115.1706764!9m1!1b1');
 
         const response = await page.goto(url, {
-               waitUntil: 'networkidle2',
+               waitUntil: 'networkidle0',
             // timeout: 0
         }); // Define the Maps URL to Scrape...
 
         console.log('waiting for selector');
-        //await page.waitFor(3000);
+        ///await page.waitFor(3000);
 
         try {
-            const result = await page.evaluate(() => { // Let's create variables and store values...
-
-                let titleClasses = document.querySelectorAll('h1.cds-33.css-ioodoa.cds-35');
-                let title = []
-
-                for (let elements of titleClasses) {
-                    title.push(elements.textContent);
-                }
-
-                let descriptionClasses = document.querySelectorAll('div.cds-63.css-kts6x.cds-65.cds-grid-item.cds-107 > p');
-                let description = []
-
-                for (let elements of descriptionClasses) {
-                    description.push(elements.textContent);
-                }
-
-                let logoClasses = document.querySelectorAll('div.css-1tgxg94 > img');
-                let logo = []
-
-                for (let elements of logoClasses) {
-                    logo.push(elements.getAttribute('src'));
-                }
-
-                let linksClasses = document.querySelectorAll('a.cds-33.cds-167.cds-169.css-y5nhn5.cds-56');
-                let links = []
-
-                for (let elements of linksClasses) {
-                    links.push(elements.getAttribute('href'));
-                }
-                
-                return {
-                    title,
-                    description,
-                    logo,
-                    links
-                };
-            });
+            const result = await page.evaluate(() =>  document.documentElement.outerHTML);
 
             return result;
 
@@ -106,4 +79,4 @@ partnerCourse.get('/partner', (req, res) => {
 })
 
 
-module.exports = partnerCourse;
+module.exports = rawHtml;

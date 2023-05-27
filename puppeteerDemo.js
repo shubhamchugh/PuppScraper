@@ -3,8 +3,12 @@ const puppeteer = require('puppeteer');
 
 async function run() {
     const browser = await puppeteer.launch({
-        executablePath: '/usr/bin/google-chrome-stable',
-        headless: true, //false only when on localServer to view simulation
+        //executablePath: '/usr/bin/google-chrome-stable',
+        headless: 'new', 
+        // `headless: true` (default) enables old Headless;
+        // `headless: 'new'` enables new Headless;
+        // `headless: false` enables “headful” mode.;
+        // `false only when on localServer to view simulation;
         ignoreHTTPSErrors: true,
         args: [
             '--no-sandbox',
@@ -28,7 +32,7 @@ async function run() {
     console.log((title) ? 'Status: Puppeteer Working fine' : 'Status: error')
 
     // Save data to JSON file
-    fs.writeFile('courses.json', JSON.stringify(title), (err) => {
+    fs.writeFile('output_demo.json', JSON.stringify(title), (err) => {
         if (err) throw err;
         console.log('File saved');
     });
